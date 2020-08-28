@@ -1,9 +1,10 @@
 package io.github.cafeteriaguild.modjournal.model;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class JournalPost {
+public class JournalPost implements Comparable<JournalPost> {
     private String modid;
     private String thumbnail;
     private String postid;
@@ -87,5 +88,12 @@ public class JournalPost {
     @Override
     public int hashCode() {
         return Objects.hash(modid, thumbnail, postid, authors, title, content);
+    }
+
+    public static final Comparator<JournalPost> COMPARATOR = Comparator.comparing(j -> j.modid + ":" + j.postid);
+
+    @Override
+    public int compareTo(JournalPost other) {
+        return COMPARATOR.compare(this, other);
     }
 }

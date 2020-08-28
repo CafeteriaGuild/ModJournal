@@ -15,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ModJournal implements ClientModInitializer {
@@ -35,12 +34,9 @@ public class ModJournal implements ClientModInitializer {
             if (metadata.containsCustomValue("modjournal:url")) {
                 CustomValue value = metadata.getCustomValue("modjournal:url");
                 if (value.getType() == CustomValue.CvType.STRING) {
-                    String http = value.getAsString();
+                    String uri = value.getAsString();
                     try {
-                        CompletableFuture.supplyAsync(new JournalDownloader(modid, new URI(http))).thenAccept(c -> {
-                            LOGGER.info("Posts received from {}: {}", modid, c);
-                            POSTS.addAll(c);
-                        });
+                        Journal.INSTANCE.load(modid, new URI(uri));
                     } catch (URISyntaxException e) {
                         LOGGER.info("Mod '" + metadata.getId() + "' have a invalid modjournal:url custom value, as it must be a URL.");
                     }

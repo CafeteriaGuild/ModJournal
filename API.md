@@ -16,7 +16,7 @@
     // must be a string or number
     "postid": "first-example-post",
 
-    // required
+    // optional
     // must be a array of strings
     "authors": [
         "Me!"

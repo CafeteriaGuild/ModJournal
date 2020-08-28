@@ -32,7 +32,9 @@ class JournalSchemaV0 implements JournalSchema {
         // if "authors" is not a array, box it inside a array
         if (object.has("authors")) {
             JsonElement authors = object.get("authors");
-            if (authors.isJsonPrimitive()) {
+            if (authors.isJsonNull()) {
+                object.add("authors", new JsonArray());
+            } else if (authors.isJsonPrimitive()) {
                 JsonArray array = new JsonArray();
                 array.add(authors);
                 object.add("authors", array);
