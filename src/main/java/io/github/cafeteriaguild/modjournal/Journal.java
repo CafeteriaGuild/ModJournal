@@ -72,6 +72,8 @@ public class Journal {
         JournalPost conflict = posts.putIfAbsent(id, post);
         if (conflict != null) {
             LOGGER.warn("Duplicate posts for identifier '{}', discarding the latter.", id);
+        } else {
+            LOGGER.info("'{}' submitted", id);
         }
     }
 
