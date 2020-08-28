@@ -1,0 +1,13 @@
+[
+    {
+        "schemaVersion": 0,
+        "modid": "modid",
+        "thumbnail": "",
+        "postid": "first-example-post",
+        "authors": [
+            "Me!"
+        ],
+        "title": "Example Title",
+        "content": "This is a content\nit supports line separators."
+    }
+]

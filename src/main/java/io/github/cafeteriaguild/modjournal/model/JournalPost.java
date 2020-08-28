@@ -1,6 +1,7 @@
 package io.github.cafeteriaguild.modjournal.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class JournalPost {
     private String modid;
@@ -56,5 +57,35 @@ public class JournalPost {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "JournalPost{" +
+            "modid='" + modid + '\'' +
+            ", thumbnail='" + thumbnail + '\'' +
+            ", postid='" + postid + '\'' +
+            ", authors=" + authors +
+            ", title='" + title + '\'' +
+            ", content='" + content + '\'' +
+            '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JournalPost that = (JournalPost) o;
+        return Objects.equals(modid, that.modid) &&
+            Objects.equals(thumbnail, that.thumbnail) &&
+            Objects.equals(postid, that.postid) &&
+            Objects.equals(authors, that.authors) &&
+            Objects.equals(title, that.title) &&
+            Objects.equals(content, that.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(modid, thumbnail, postid, authors, title, content);
     }
 }
