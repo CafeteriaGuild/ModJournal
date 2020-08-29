@@ -3,7 +3,7 @@
         "schemaVersion": 0,
         "modid": "modid",
         "thumbnail": "",
-        "postid": "first-example-post",
+        "postid": "first_example_post",
         "authors": [
             "Me!"
         ],

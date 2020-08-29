@@ -42,7 +42,6 @@ public class JournalConfig {
             return;
         } else if (file.isFile()) {
             try (InputStream in = new FileInputStream(file)) {
-                LOGGER.info("Importing...");
                 FiberSerialization.deserialize(tree, in, JANKSON);
             } catch (Exception e) {
                 LOGGER.error("Error on deserializing config file", e);

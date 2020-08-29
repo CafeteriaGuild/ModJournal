@@ -14,10 +14,11 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
@@ -28,14 +29,10 @@ public class Journal {
     private static final HttpClient HTTP_CLIENT = HttpClientBuilder.create()
         .setConnectionManager(new PoolingHttpClientConnectionManager(3, TimeUnit.SECONDS))
         .build();
-    private final Map<Identifier, JournalPost> posts = new ConcurrentHashMap<>();
     private final Map<URI, String> dejavu = new ConcurrentHashMap<>();
+    public Data data = new Data();
 
     private Journal() {
-    }
-
-    public List<JournalPost> getPosts() {
-        return ImmutableList.sortedCopyOf(posts.values());
     }
 
     public void load(String modid, URI uri) {
@@ -56,25 +53,21 @@ public class Journal {
         ForkJoinPool.commonPool().execute(new JournalDownloader(modid, uri));
     }
 
+    public List<JournalPost> getPosts() {
+        return ImmutableList.sortedCopyOf(data.posts.values());
+    }
+
     public void submitAll(List<JournalPost> posts) {
         for (JournalPost post : posts) {
             submit(post);
         }
     }
 
-    private void submit(JournalPost post) {
-        if (!validate(post)) {
-            return;
-        }
-
-        Identifier id = new Identifier(post.getModid(), post.getPostid());
-
-        JournalPost conflict = posts.putIfAbsent(id, post);
-        if (conflict != null) {
-            LOGGER.warn("Duplicate posts for identifier '{}', discarding the latter.", id);
-        } else {
-            LOGGER.info("'{}' submitted", id);
-        }
+    public void remove(JournalPost post) {
+        Identifier identifier = new Identifier(post.getModid(), post.getPostid());
+        data.posts.remove(identifier);
+        data.deletedPosts.add(identifier);
+        Journal.this.save();
     }
 
     @SuppressWarnings("RedundantIfStatement")
@@ -92,6 +85,64 @@ public class Journal {
         } else {
             return true;
         }
+    }
+
+    private void submit(JournalPost post) {
+        if (!validate(post)) {
+            return;
+        }
+
+        Identifier id = new Identifier(post.getModid(), post.getPostid());
+
+        if (!data.deletedPosts.contains(id)) {
+            data.posts.putIfAbsent(id, post);
+        }
+    }
+
+    public synchronized void load() {
+        File folder = new File("modjournal_cache");
+        if (folder.isFile() && !folder.delete()) {
+            LOGGER.warn("ModJournal's cache folder is a file and couldn't get deleted, ignoring configs.");
+            return;
+        }
+        if (!folder.exists() && !folder.mkdirs()) {
+            LOGGER.warn("ModJournal's cache folder is a file and couldn't get deleted, ignoring configs.");
+            return;
+        }
+        File file = new File(folder, "data.json");
+        if (file.isDirectory()) {
+            LOGGER.warn("ModJournal's data cache file is a folder, please delete it.");
+        } else if (file.isFile()) {
+            try (InputStream in = new FileInputStream(file); Reader r = new InputStreamReader(in)) {
+                data = ModJournal.GSON.fromJson(r, Data.class);
+            } catch (Exception e) {
+                LOGGER.error("Error on deserializing data cache file", e);
+            }
+        }
+
+    }
+
+    public synchronized void save() {
+        File folder = new File("modjournal_cache");
+        if (folder.isFile() && !folder.delete()) {
+            LOGGER.warn("Cache folder is a file and couldn't get deleted, ignoring configs.");
+            return;
+        }
+        if (!folder.exists() && !folder.mkdirs()) {
+            LOGGER.warn("Cache folder is a file and couldn't get deleted, ignoring configs.");
+            return;
+        }
+        File file = new File(folder, "data.json");
+        try (OutputStream out = new FileOutputStream(file); Writer w = new OutputStreamWriter(out)) {
+            ModJournal.GSON.toJson(data, w);
+        } catch (Exception e) {
+            LOGGER.error("Error on serializing data cache file", e);
+        }
+    }
+
+    public static class Data {
+        private final Map<Identifier, JournalPost> posts = new ConcurrentHashMap<>();
+        private final Set<Identifier> deletedPosts = ConcurrentHashMap.newKeySet();
     }
 
     class JournalDownloader implements Runnable {
@@ -112,6 +163,7 @@ public class Journal {
                 Journal.this.submitAll(list);
             } catch (Exception ignored) {
             }
+            Journal.this.save();
         }
     }
 }
