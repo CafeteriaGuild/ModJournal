@@ -1,5 +1,6 @@
 package io.github.cafeteriaguild.modjournal.mixin;
 
+import io.github.cafeteriaguild.modjournal.screen.JournalScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -38,9 +39,7 @@ public abstract class TitleScreenMixin extends Screen {
                 20,
                 new Identifier("modjournal", "textures/gui/open_journal.png"), 20, 40,
                 (buttonWidget) -> {
-                    MinecraftClient.getInstance().openScreen(new LanguageOptionsScreen(
-                        this, client.options, client.getLanguageManager()
-                    ));
+                    MinecraftClient.getInstance().openScreen(new JournalScreen());
                 }, new TranslatableText("button.modjournal.open_journal"))
         );
     }
