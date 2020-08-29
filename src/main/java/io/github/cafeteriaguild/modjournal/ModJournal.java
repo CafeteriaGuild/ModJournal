@@ -27,7 +27,7 @@ public class ModJournal implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        Journal.INSTANCE.load();
+        Journal.INSTANCE.fetch();
         loadFromConfig();
         loadFromMetadata();
     }
@@ -36,7 +36,7 @@ public class ModJournal implements ClientModInitializer {
         JournalConfig config = new JournalConfig();
         config.load();
         for (Map.Entry<String, URI> entry : config.customJournals.getValue().entrySet()) {
-            Journal.INSTANCE.load(entry.getKey(), entry.getValue());
+            Journal.INSTANCE.fetch(entry.getValue(), entry.getKey());
         }
     }
 
@@ -53,7 +53,7 @@ public class ModJournal implements ClientModInitializer {
                 if (value.getType() == CustomValue.CvType.STRING) {
                     String uri = value.getAsString();
                     try {
-                        Journal.INSTANCE.load(modid, new URI(uri));
+                        Journal.INSTANCE.fetch(new URI(uri), modid);
                     } catch (URISyntaxException e) {
                         LOGGER.info("Mod '{}' have a invalid modjournal:url custom value, as it must be a URL.", modid);
                     }

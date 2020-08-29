@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,13 @@ public class Journal {
     private Journal() {
     }
 
-    public void load(String modid, URI uri) {
+    public void refetchAll() {
+        LinkedHashMap<URI, String> map = new LinkedHashMap<>(dejavu);
+        dejavu.clear();
+        map.forEach(this::fetch);
+    }
+
+    public void fetch(URI uri, String modid) {
         if (modid == null) {
             modid = "modjournal.orphan";
         }
@@ -99,7 +106,7 @@ public class Journal {
         }
     }
 
-    public synchronized void load() {
+    public synchronized void fetch() {
         File folder = new File("modjournal_cache");
         if (folder.isFile() && !folder.delete()) {
             LOGGER.warn("ModJournal's cache folder is a file and couldn't get deleted, ignoring configs.");

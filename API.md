@@ -2,7 +2,7 @@
 
 ## Proposed API
 
-A mod or configuration can register a URL to be queried on the startup of the game.
+A mod or configuration can register a URL to be fetch on the startup of the game.
 
 The JSON must be either a JSON object or array of objects,
 and the objects must follow the Post Schema below.
