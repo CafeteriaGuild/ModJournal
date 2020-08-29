@@ -41,7 +41,7 @@ public abstract class TitleScreenMixin extends Screen {
                     MinecraftClient.getInstance().openScreen(new LanguageOptionsScreen(
                         this, client.options, client.getLanguageManager()
                     ));
-                }, new TranslatableText("modjournal:open_journal"))
+                }, new TranslatableText("button.modjournal.open_journal"))
         );
     }
 }
