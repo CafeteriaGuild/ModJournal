@@ -1,14 +1,15 @@
 {
-    "required": true,
-    "minVersion": "0.8",
-    "package": "io.github.cafeteriaguild.modjournal.mixin",
-    "compatibilityLevel": "JAVA_8",
-    "mixins": [
-    ],
-    "client": [
-        "ExampleMixin"
-    ],
-    "injectors": {
-        "defaultRequire": 1
-    }
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.cafeteriaguild.modjournal.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "ExampleMixin",
+    "TitleScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
