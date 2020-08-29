@@ -22,6 +22,11 @@
         "Me!"
     ],
 
+    // optional
+    // if it's a number. like 1598662612, it'll be considered a unix time
+    // otherwise, it should be a string in the format "YYYY-MM-DD"
+    "timestamp": "",
+
     // required
     // must be a string
     "title": "Example Title",

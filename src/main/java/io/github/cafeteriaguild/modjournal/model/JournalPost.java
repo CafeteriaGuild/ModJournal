@@ -11,6 +11,7 @@ public class JournalPost implements Comparable<JournalPost> {
     private List<String> authors;
     private String title;
     private String content;
+    private Long timestamp;
 
     public String getModid() {
         return modid;
@@ -58,6 +59,14 @@ public class JournalPost implements Comparable<JournalPost> {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override
