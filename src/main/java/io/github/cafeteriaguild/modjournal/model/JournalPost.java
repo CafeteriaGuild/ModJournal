@@ -1,5 +1,8 @@
 package io.github.cafeteriaguild.modjournal.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -69,6 +72,11 @@ public class JournalPost implements Comparable<JournalPost> {
         this.timestamp = timestamp;
     }
 
+    public LocalDate timestampAsLocalDate() {
+        Long timestamp = this.timestamp;
+        return timestamp != null ? LocalDateTime.ofEpochSecond(timestamp, 0, ZoneOffset.UTC).toLocalDate() : null;
+    }
+
     @Override
     public String toString() {
         return "JournalPost{" +
@@ -78,6 +86,7 @@ public class JournalPost implements Comparable<JournalPost> {
             ", authors=" + authors +
             ", title='" + title + '\'' +
             ", content='" + content + '\'' +
+            ", timestamp=" + timestamp +
             '}';
     }
 
@@ -91,12 +100,13 @@ public class JournalPost implements Comparable<JournalPost> {
             Objects.equals(postid, that.postid) &&
             Objects.equals(authors, that.authors) &&
             Objects.equals(title, that.title) &&
-            Objects.equals(content, that.content);
+            Objects.equals(content, that.content) &&
+            Objects.equals(timestamp, that.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(modid, thumbnail, postid, authors, title, content);
+        return Objects.hash(modid, thumbnail, postid, authors, title, content, timestamp);
     }
 
     public static final Comparator<JournalPost> COMPARATOR = Comparator.comparing(j -> j.modid + ":" + j.postid);
