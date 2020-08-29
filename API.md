@@ -60,6 +60,10 @@ and serverpacks are suggested to register the server's posts as `modjournal.modp
     // must be a string or number
     "postid": "first-example-post",
 
+    // optional, by default 'unspecified'
+    // must be a string
+    "type": "",
+
     // optional
     // must be a array of strings
     "authors": [
@@ -81,3 +85,9 @@ and serverpacks are suggested to register the server's posts as `modjournal.modp
     "content": "This is a content\nit supports line separators.",
 }
 ```
+
+### Proposed types
+
+- `unspecified` - The default
+- `changelog` - For version changelog
+- `update` - For advertising available updates

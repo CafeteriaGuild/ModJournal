@@ -11,6 +11,7 @@ public class JournalPost implements Comparable<JournalPost> {
     private String modid;
     private String thumbnail;
     private String postid;
+    private String type;
     private List<String> authors;
     private String title;
     private String content;
@@ -38,6 +39,14 @@ public class JournalPost implements Comparable<JournalPost> {
 
     public void setPostid(String postid) {
         this.postid = postid;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public List<String> getAuthors() {
@@ -83,6 +92,7 @@ public class JournalPost implements Comparable<JournalPost> {
             "modid='" + modid + '\'' +
             ", thumbnail='" + thumbnail + '\'' +
             ", postid='" + postid + '\'' +
+            ", type='" + type + '\'' +
             ", authors=" + authors +
             ", title='" + title + '\'' +
             ", content='" + content + '\'' +
@@ -98,6 +108,7 @@ public class JournalPost implements Comparable<JournalPost> {
         return Objects.equals(modid, that.modid) &&
             Objects.equals(thumbnail, that.thumbnail) &&
             Objects.equals(postid, that.postid) &&
+            Objects.equals(type, that.type) &&
             Objects.equals(authors, that.authors) &&
             Objects.equals(title, that.title) &&
             Objects.equals(content, that.content) &&
@@ -106,7 +117,7 @@ public class JournalPost implements Comparable<JournalPost> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(modid, thumbnail, postid, authors, title, content, timestamp);
+        return Objects.hash(modid, thumbnail, postid, type, authors, title, content, timestamp);
     }
 
     public static final Comparator<JournalPost> COMPARATOR = Comparator.comparing(j -> j.modid + ":" + j.postid);

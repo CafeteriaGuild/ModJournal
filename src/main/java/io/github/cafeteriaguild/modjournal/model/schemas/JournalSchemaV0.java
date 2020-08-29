@@ -54,6 +54,15 @@ class JournalSchemaV0 implements JournalSchema {
             }
         }
 
+        if (object.has("type")) {
+            JsonElement type = object.get("type");
+            if (type.isJsonPrimitive() && !type.getAsJsonPrimitive().isString()) {
+                object.add("type", new JsonPrimitive("unspecified"));
+            }
+        } else {
+            object.add("type", new JsonPrimitive("unspecified"));
+        }
+
         if (object.has("timestamp")) {
             JsonElement timestamp = object.get("timestamp");
             if (timestamp.isJsonPrimitive()) {
