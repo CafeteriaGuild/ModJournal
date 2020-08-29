@@ -7,6 +7,9 @@ import com.google.gson.JsonPrimitive;
 import io.github.cafeteriaguild.modjournal.ModJournal;
 import io.github.cafeteriaguild.modjournal.model.JournalPost;
 
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
 
 class JournalSchemaV0 implements JournalSchema {
@@ -48,6 +51,22 @@ class JournalSchemaV0 implements JournalSchema {
                 StringJoiner j = new StringJoiner("\n");
                 joinToString(content.getAsJsonArray(), j);
                 object.add("content", new JsonPrimitive(j.toString()));
+            }
+        }
+
+        if (object.has("timestamp")) {
+            JsonElement timestamp = object.get("timestamp");
+            if (timestamp.isJsonPrimitive()) {
+                JsonPrimitive value = timestamp.getAsJsonPrimitive();
+                if (value.isString()) {
+                    object.add(
+                        "timestamp",
+                        new JsonPrimitive(
+                            LocalDate.parse(value.getAsString(), DateTimeFormatter.ISO_DATE)
+                                .atStartOfDay(ZoneOffset.UTC).toEpochSecond()
+                        )
+                    );
+                }
             }
         }
 
